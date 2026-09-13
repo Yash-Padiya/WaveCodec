@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}WaveCode{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('generate_view') }}">WaveCode</a>
+    <nav>
+      <a href="{{ url_for('generate_view') }}">Generate</a>
+      <a href="{{ url_for('decode_view') }}">Decode</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>Turn the person you love most into a wearable waveform. No password, no account — just this page and a clear photo, for as long as you need it.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Decode — WaveCode{% endblock %}
+{% block content %}
+  <section class="panel">
+    <h1>Decode a WaveCode photo</h1>
+    <p class="subtitle">Upload a straight-on, evenly lit photo of a WaveCode. No name or date needed to look it up — the photo is the whole key.</p>
+
+    {% if error %}
+      <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="form">
+      <label>
+        Photo
+        <input type="file" name="photo" accept="image/*" required>
+      </label>
+      <button type="submit">Decode</button>
+    </form>
+  </section>
+
+  {% if result %}
+    <section class="panel">
+      <h2>Decoded result</h2>
+      <p class="decoded-name">{{ result.name }}</p>
+
+      {% if result.date %}
+        <p class="decoded-field"><strong>Birth date:</strong> {{ result.date.date_str }}</p>
+      {% endif %}
+      {% if result.message %}
+        <p class="decoded-field"><strong>Message:</strong> {{ result.message }}</p>
+      {% endif %}
+      {% if result.additional_info %}
+        <p class="decoded-field"><strong>Additional info:</strong> {{ result.additional_info }}</p>
+      {% endif %}
+
+      {% if result.verified %}
+        <div class="alert alert-ok">This reading looks clear and complete.</div>
+      {% else %}
+        <div class="alert alert-warning">{{ result.note }}</div>
+      {% endif %}
+    </section>
+  {% endif %}
+{% endblock %}

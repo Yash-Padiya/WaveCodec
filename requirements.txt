@@ -1,0 +1,14 @@
+# Image processing library (PIL replacement)
+Pillow==11.0.0
+
+# Numerical computing library
+numpy==2.2.0
+
+# Web framework for app.py
+Flask==3.1.0
+
+# Loads .env for local dev (Render sets real env vars directly)
+python-dotenv==1.0.1
+
+# Production WSGI server (used by the Dockerfile / Render)
+gunicorn==23.0.0

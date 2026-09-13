@@ -1,0 +1,11 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.git/
+.gitignore
+.idea/
+.vscode/
+*.md
+.env
+.env.example

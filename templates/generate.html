@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Generate — WaveCode{% endblock %}
+{% block content %}
+  <section class="panel">
+    <h1>Generate a WaveCode</h1>
+    <p class="subtitle">Encode the person you love most into a waveform you can put on a tattoo, sticker, or phone case. Only Name is required — add as much or as little else as you like.</p>
+
+    {% if error %}
+      <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="form" id="generate-form">
+      <label>
+        Name <span class="required">(required)</span>
+        <input type="text" name="name" value="{{ form.name }}" maxlength="20" placeholder="e.g. Jordan" required>
+        <span class="hint">Up to 20 characters.</span>
+      </label>
+      <label>
+        Their birth date <span class="optional">(optional)</span>
+        <input type="date" name="birth_date" value="{{ form.birth_date }}">
+      </label>
+      <label>
+        Special message <span class="optional">(optional)</span>
+        <input type="text" name="message" value="{{ form.message }}" maxlength="26" placeholder="e.g. Forever yours">
+        <span class="hint">Up to 26 characters. Spaces/punctuation aren't encoded — decodes back as one run-together word.</span>
+      </label>
+      <label>
+        Additional information <span class="optional">(optional)</span>
+        <input type="text" name="additional_info" value="{{ form.additional_info }}" maxlength="24" placeholder="e.g. Stargazer">
+        <span class="hint">Up to 24 characters.</span>
+      </label>
+      <button type="submit">Generate</button>
+    </form>
+  </section>
+
+  {% if result %}
+    <section class="panel" id="wavecode-result">
+      <h2>Your WaveCode</h2>
+      <div class="wavecode-preview">
+        {{ result.svg | safe }}
+      </div>
+
+      <div class="downloads">
+        <form method="post" action="{{ url_for('download', fmt='svg') }}">
+          <input type="hidden" name="name" value="{{ form.name }}">
+          <input type="hidden" name="birth_date" value="{{ form.birth_date }}">
+          <input type="hidden" name="message" value="{{ form.message }}">
+          <input type="hidden" name="additional_info" value="{{ form.additional_info }}">
+          <button type="submit">Download SVG (for a tattoo artist)</button>
+        </form>
+        <form method="post" action="{{ url_for('download', fmt='png') }}">
+          <input type="hidden" name="name" value="{{ form.name }}">
+          <input type="hidden" name="birth_date" value="{{ form.birth_date }}">
+          <input type="hidden" name="message" value="{{ form.message }}">
+          <input type="hidden" name="additional_info" value="{{ form.additional_info }}">
+          <button type="submit">Download PNG (for a sticker/case)</button>
+        </form>
+      </div>
+
+      <details>
+        <summary>Measurements for your tattoo artist</summary>
+        <p class="hint">Total size: {{ result.measurements.canvas_width_mm }}mm &times; {{ result.measurements.canvas_height_mm }}mm. The two "calibration" bars are the thin marker bars at each end — everything else is a "content" bar.</p>
+        <table class="measurements-table">
+          <thead><tr><th>Bar #</th><th>Type</th><th>Position (mm)</th><th>Width (mm)</th><th>Height (mm)</th></tr></thead>
+          <tbody>
+            {% for b in result.measurements.bars %}
+              <tr>
+                <td>{{ b.index }}</td>
+                <td>{{ b.type }}</td>
+                <td>{{ b.x_mm }}</td>
+                <td>{{ b.width_mm }}</td>
+                <td>{{ b.height_mm }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </details>
+    </section>
+    <script>
+      document.getElementById("wavecode-result").scrollIntoView({ behavior: "smooth", block: "start" });
+    </script>
+  {% endif %}
+{% endblock %}
